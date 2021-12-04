@@ -14,7 +14,7 @@ app.use(express.static(clientPath));
 
 const server = http.createServer(app);
 const io = socketIo(server);
-const { makeTurn, clear, getBoard } = board(15);
+const { makeTurn, clear, getBoard, getGame } = board(15);
 
 io.on("connection", (sock: socketIo) => {
   const color = 1;
@@ -24,7 +24,7 @@ io.on("connection", (sock: socketIo) => {
 
   const onTurn = ({ x, y }: { x: number; y: number }) => {
     if (coolDown()) {
-      io.emit("turn", { board: getBoard(), x, y, color });
+      io.emit("turn", { game: getGame(), x, y, color });
       const biggestRectangle = makeTurn(x, y, color);
       io.emit("biggestRectangle", {
         board: getBoard(),
@@ -45,7 +45,7 @@ io.on("connection", (sock: socketIo) => {
   sock.on("message", (text: string) => io.emit("message", text));
   sock.on("turn", onTurn);
 
-  sock.emit("board", getBoard());
+  sock.emit("board", getGame());
 });
 
 server.on("error", (err) => {

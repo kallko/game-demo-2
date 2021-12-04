@@ -1,23 +1,30 @@
+import { Game } from "../@type/Game";
+
 export const board = (size: number) => {
   // two-dimensional array filled with nulls
-  let board: number[][] | null[][];
+  let game: Game = {
+    board: [],
+    filledCells: [],
+    biggestRectangleCoordinates: [],
+    biggestRectangleSize: 0,
+  };
 
   const clear = () => {
-    board = Array(size)
+    game.board = Array(size)
       // @ts-ignore
       .fill()
       .map(() => Array(size).fill(null));
   };
 
   const inBounds = (x: number, y: number) => {
-    return y >= 0 && y < board.length && x >= 0 && x < board[y].length;
+    return y >= 0 && y < board.length && x >= 0 && x < game.board[y].length;
   };
 
   const _numMatches = (x: number, y: number, dx: number, dy: number) => {
     let i = 1;
     while (
       inBounds(x + i * dx, y + i * dy) &&
-      board[y + i * dy][x + i * dx] === board[y][x]
+      game.board[y + i * dy][x + i * dx] === game.board[y][x]
     ) {
       i++;
     }
@@ -26,7 +33,7 @@ export const board = (size: number) => {
 
   const isWinningTurn = (x: number, y: number) => {
     console.log("WINNG ", x, y);
-    console.log("Board ", board);
+    console.log("Board ", game.board);
     return [
       [1, 1],
       [2, 2],
@@ -34,16 +41,17 @@ export const board = (size: number) => {
   };
 
   const makeTurn = (x: number, y: number, _value: number | string) => {
-    board[y][x] = !board[y][x] ? 1 : null;
+    game.board[y][x] = !game.board[y][x] ? 1 : null;
     return isWinningTurn(x, y);
   };
 
-  const getBoard = () => board;
-
+  const getBoard = () => game.board;
+  const getGame = () => game;
   clear();
   return {
     makeTurn,
     getBoard,
     clear,
+    getGame,
   };
 };

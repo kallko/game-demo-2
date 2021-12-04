@@ -84,10 +84,10 @@ const createBoard = (canvas, numCells = 15) => {
     drawGrid();
   };
 
-  const reset = (board = []) => {
+  const reset = (game = []) => {
     clear();
     drawGrid();
-    drawBoard(board);
+    drawBoard(game.board);
   };
 
   const getCellCoordinates = (x, y) => ({
