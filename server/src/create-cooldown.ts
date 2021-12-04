@@ -1,4 +1,4 @@
-const createCooldown = (delay) => {
+const createCoolDown = (delay: number) : ()=>boolean => {
   let lastUpdateTime = 0;
 
   // if cooled down - resets the timer
@@ -13,4 +13,4 @@ const createCooldown = (delay) => {
 
 };
 
-module.exports = createCooldown;
+module.exports = createCoolDown;
