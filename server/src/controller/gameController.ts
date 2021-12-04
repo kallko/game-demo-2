@@ -1,6 +1,6 @@
 import { Game } from "../@type/Game";
 
-export const board = (size: number) => {
+export const game = (size: number) => {
   // two-dimensional array filled with nulls
   let game: Game = {
     board: [],
@@ -17,7 +17,9 @@ export const board = (size: number) => {
   };
 
   const inBounds = (x: number, y: number) => {
-    return y >= 0 && y < board.length && x >= 0 && x < game.board[y].length;
+    return (
+      y >= 0 && y < game.board.length && x >= 0 && x < game.board[y].length
+    );
   };
 
   const _numMatches = (x: number, y: number, dx: number, dy: number) => {
@@ -40,13 +42,13 @@ export const board = (size: number) => {
     ];
   };
 
-  const makeTurn = (x: number, y: number, _value: number | string) => {
+  const makeTurn = (x: number, y: number) => {
     game.board[y][x] = !game.board[y][x] ? 1 : null;
     return isWinningTurn(x, y);
   };
 
   const getBoard = () => game.board;
-  const getGame = () => game;
+  const getGame = (): Game => game;
   clear();
   return {
     makeTurn,

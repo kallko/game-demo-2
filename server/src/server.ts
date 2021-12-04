@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 // @ts-ignore
 import socketIo from "socket.io";
-import { board } from "./controller/boardController";
+import { game } from "./controller/gameController";
 const createCoolDown = require("./create-cooldown");
 
 const app = express();
@@ -14,7 +14,7 @@ app.use(express.static(clientPath));
 
 const server = http.createServer(app);
 const io = socketIo(server);
-const { makeTurn, clear, getBoard, getGame } = board(15);
+const { makeTurn, clear, getBoard, getGame } = game(15);
 
 io.on("connection", (sock: socketIo) => {
   const color = 1;
@@ -25,7 +25,7 @@ io.on("connection", (sock: socketIo) => {
   const onTurn = ({ x, y }: { x: number; y: number }) => {
     if (coolDown()) {
       io.emit("turn", { game: getGame(), x, y, color });
-      const biggestRectangle = makeTurn(x, y, color);
+      const biggestRectangle = makeTurn(x, y);
       io.emit("biggestRectangle", {
         board: getBoard(),
         biggestRectangle: [
