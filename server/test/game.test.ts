@@ -63,5 +63,27 @@ describe("Fleet Battle tests:", function () {
       const game = gameController.getGame();
       expect(game.filledCells[0]).deep.equal({ x: 2, y: 2 });
     });
+    it("filled cells should be sorted", () => {
+      gameController.makeTurn(1, 1);
+      gameController.makeTurn(2, 2);
+      gameController.makeTurn(5, 5);
+      const game = gameController.getGame();
+      expect(game.filledCells).deep.equal([
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 5, y: 5 },
+      ]);
+    });
+    it("filled cells should be sorted with different turns", () => {
+      gameController.makeTurn(5, 5);
+      gameController.makeTurn(2, 2);
+      gameController.makeTurn(1, 1);
+      const game = gameController.getGame();
+      expect(game.filledCells).deep.equal([
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 5, y: 5 },
+      ]);
+    });
   });
 });

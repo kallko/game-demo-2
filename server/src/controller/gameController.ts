@@ -1,4 +1,4 @@
-import { Game } from "../@type/Game";
+import { Coordinate, Game } from "../@type/Game";
 
 export const game = (size: number) => {
   // two-dimensional array filled with nulls
@@ -51,11 +51,13 @@ export const game = (size: number) => {
 
   const setFilledCells = (x: number, y: number) => {
     if (game.board[y][x]) {
-      return (game.filledCells = game.filledCells.filter(
+      game.filledCells = game.filledCells.filter(
         (cell) => !(cell.x === x && cell.y === y)
-      ));
+      );
+    } else {
+      game.filledCells.push({ x, y });
     }
-    return game.filledCells.push({ x, y });
+    return game.filledCells.sort(sortByDistanceToLeftTop);
   };
 
   const getBoard = () => game.board;
@@ -68,3 +70,10 @@ export const game = (size: number) => {
     getGame,
   };
 };
+
+function sortByDistanceToLeftTop(
+  coordinateA: Coordinate,
+  coordinateB: Coordinate
+) {
+  return coordinateA.x + coordinateA.y - coordinateB.x - coordinateB.y;
+}
