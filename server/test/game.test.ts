@@ -38,5 +38,30 @@ describe("Fleet Battle tests:", function () {
       const board = gameController.getBoard();
       expect(board[2][1]).equal(null);
     });
+    it("after first turn size of filled cells should be 1", () => {
+      gameController.makeTurn(1, 2);
+      const game = gameController.getGame();
+      expect(game.filledCells.length).equal(1);
+    });
+    it("after two turns size of filled cells should be 2", () => {
+      gameController.makeTurn(1, 2);
+      gameController.makeTurn(2, 2);
+      const game = gameController.getGame();
+      expect(game.filledCells.length).equal(2);
+    });
+    it("after three turns (one in the same cell) size of filled cells should be 1", () => {
+      gameController.makeTurn(1, 2);
+      gameController.makeTurn(2, 2);
+      gameController.makeTurn(1, 2);
+      const game = gameController.getGame();
+      expect(game.filledCells.length).equal(1);
+    });
+    it("after three turns (one in the same cell) filled cells should has 1 element x: 2, y: 2", () => {
+      gameController.makeTurn(1, 2);
+      gameController.makeTurn(2, 2);
+      gameController.makeTurn(1, 2);
+      const game = gameController.getGame();
+      expect(game.filledCells[0]).deep.equal({ x: 2, y: 2 });
+    });
   });
 });

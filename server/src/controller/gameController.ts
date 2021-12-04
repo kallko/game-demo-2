@@ -43,8 +43,19 @@ export const game = (size: number) => {
   };
 
   const makeTurn = (x: number, y: number) => {
+    setFilledCells(x, y);
     game.board[y][x] = !game.board[y][x] ? 1 : null;
+
     return isWinningTurn(x, y);
+  };
+
+  const setFilledCells = (x: number, y: number) => {
+    if (game.board[y][x]) {
+      return (game.filledCells = game.filledCells.filter(
+        (cell) => !(cell.x === x && cell.y === y)
+      ));
+    }
+    return game.filledCells.push({ x, y });
   };
 
   const getBoard = () => game.board;
