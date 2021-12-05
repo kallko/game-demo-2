@@ -34,8 +34,6 @@ export const game = (size: number) => {
   };
 
   const isWinningTurn = (x: number, y: number) => {
-    console.log("WINNG ", x, y);
-    console.log("Board ", game.board);
     return [
       [1, 1],
       [2, 2],
@@ -45,7 +43,7 @@ export const game = (size: number) => {
   const makeTurn = (x: number, y: number) => {
     setFilledCells(x, y);
     game.board[y][x] = !game.board[y][x] ? 1 : null;
-
+    getBiggestRectangle();
     return isWinningTurn(x, y);
   };
 
@@ -60,6 +58,66 @@ export const game = (size: number) => {
     return game.filledCells.sort(sortByDistanceToLeftTop);
   };
 
+  const getBiggestRectangle = () => {
+    game.biggestRectangleSize = 0;
+    game.biggestRectangleCoordinates = [];
+    game.filledCells.forEach((cell) => {
+      if (game.biggestRectangleSize === 0) {
+        game.biggestRectangleSize = 1;
+        game.biggestRectangleCoordinates = [cell, cell];
+      }
+      let currentDiagonal = 1;
+      let isCurrentDiagonalMaximal = false;
+      let i = 0;
+      while (!isCurrentDiagonalMaximal && i < 14) {
+        i++;
+        // checkRectangleToRight(cell, currentDiagonal);
+        // checkRectangleToBottom(cell, currentDiagonal);
+        const nextDiagonal = getNextDiagonal(cell, currentDiagonal);
+        if (currentDiagonal === nextDiagonal) {
+          isCurrentDiagonalMaximal = true;
+        } else {
+          currentDiagonal = nextDiagonal;
+        }
+      }
+    });
+  };
+
+  const getNextDiagonal = (
+    cell: Coordinate,
+    currentDiagonal: number
+  ): number => {
+    if (cell.x + currentDiagonal <= 14 && cell.y + currentDiagonal <= 14) {
+      for (let y = cell.y; y <= cell.y + currentDiagonal; y++) {
+        for (let x = cell.x; x <= cell.x + currentDiagonal; x++) {
+          if (!game.board[y][x]) {
+            return currentDiagonal;
+          }
+        }
+      }
+      return currentDiagonal + 1;
+    } else {
+      return currentDiagonal;
+    }
+  };
+
+  const getPotentialMaximumForCell = (cell: Coordinate): number => {
+    return (15 - cell.x) * (15 - cell.y);
+  };
+
+  const getPotentialMaximumForRectangleToRight = (
+    cell: Coordinate,
+    diagonal: number
+  ): number => {
+    return diagonal * (15 - cell.x);
+  };
+
+  const getPotentialMaximumForRectangleToBottom = (
+    cell: Coordinate,
+    diagonal: number
+  ): number => {
+    return (15 - cell.y) * diagonal;
+  };
   const getBoard = () => game.board;
   const getGame = (): Game => game;
   clear();
@@ -68,6 +126,9 @@ export const game = (size: number) => {
     getBoard,
     clear,
     getGame,
+    getPotentialMaximumForCell,
+    getPotentialMaximumForRectangleToRight,
+    getPotentialMaximumForRectangleToBottom,
   };
 };
 

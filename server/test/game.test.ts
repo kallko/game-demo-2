@@ -1,9 +1,9 @@
 import * as GameController from "../src/controller/GameController";
 import { expect } from "chai";
 
-describe("Fleet Battle tests:", function () {
+describe("Game tests:", function () {
   let gameController: any;
-  beforeEach("board Creation", () => {
+  beforeEach("game init", () => {
     gameController = GameController.game(15);
   });
   describe("init game", () => {
@@ -84,6 +84,100 @@ describe("Fleet Battle tests:", function () {
         { x: 2, y: 2 },
         { x: 5, y: 5 },
       ]);
+    });
+    describe("getBiggestRectangle", () => {
+      it("after first turn, biggestRectangle has size 1 and same coordinates for lft-top and bottom-right", () => {
+        gameController.makeTurn(5, 5);
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(1);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 5, y: 5 },
+          { x: 5, y: 5 },
+        ]);
+      });
+    });
+    describe("check mat helpers ", () => {
+      it("get potential maximum for cell 0 0", () => {
+        const result = gameController.getPotentialMaximumForCell({
+          x: 0,
+          y: 0,
+        });
+        expect(result).equal(225);
+      });
+      it("get potential maximum for cell 4 4", () => {
+        const result = gameController.getPotentialMaximumForCell({
+          x: 5,
+          y: 5,
+        });
+        expect(result).equal(100);
+      });
+      it("get potential maximum for cell 14 14", () => {
+        const result = gameController.getPotentialMaximumForCell({
+          x: 14,
+          y: 14,
+        });
+        expect(result).equal(1);
+      });
+      it("get rectangle to right potential maximum for cell 0 0 and diagonal 1", () => {
+        const result = gameController.getPotentialMaximumForRectangleToRight(
+          {
+            x: 0,
+            y: 0,
+          },
+          1
+        );
+        expect(result).equal(15);
+      });
+      it("get rectangle to right potential maximum for cell 0 14 and diagonal 1", () => {
+        const result = gameController.getPotentialMaximumForRectangleToRight(
+          {
+            x: 14,
+            y: 0,
+          },
+          1
+        );
+        expect(result).equal(1);
+      });
+      it("get rectangle to right potential maximum for cell 12 12 and diagonal 3", () => {
+        const result = gameController.getPotentialMaximumForRectangleToRight(
+          {
+            x: 12,
+            y: 12,
+          },
+          3
+        );
+        expect(result).equal(9);
+      });
+      it("get rectangle to right potential maximum for cell 0 1 and diagonal 3", () => {
+        const result = gameController.getPotentialMaximumForRectangleToRight(
+          {
+            x: 0,
+            y: 1,
+          },
+          3
+        );
+        expect(result).equal(45);
+      });
+      it("get rectangle to bottom potential maximum for cell 0 0 and diagonal 3", () => {
+        const result = gameController.getPotentialMaximumForRectangleToBottom(
+          {
+            x: 0,
+            y: 0,
+          },
+          3
+        );
+        expect(result).equal(45);
+      });
+      it("get rectangle to bottom potential maximum for cell 10 10 and diagonal 4", () => {
+        const result = gameController.getPotentialMaximumForRectangleToBottom(
+          {
+            x: 10,
+            y: 10,
+          },
+          4
+        );
+        expect(result).equal(20);
+      });
     });
   });
 });
