@@ -179,5 +179,93 @@ describe("Game tests:", function () {
         expect(result).equal(20);
       });
     });
+    describe("Check best rectangle findings", () => {
+      it("Check Rectangle from 1 cell", () => {
+        const turns = [{ x: 0, y: 0 }];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(1);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+        ]);
+      });
+      it("Check Rectangle from 4 cell", () => {
+        const turns = [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 0, y: 1 },
+          { x: 1, y: 1 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(4);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 0, y: 0 },
+          { x: 1, y: 1 },
+        ]);
+      });
+      it("Check Rectangle from 9 cell (square 3x3)", () => {
+        const turns = [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+          { x: 1, y: 2 },
+          { x: 2, y: 0 },
+          { x: 2, y: 1 },
+          { x: 2, y: 2 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(9);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 0, y: 0 },
+          { x: 2, y: 2 },
+        ]);
+      });
+      it("Check Rectangle from 9 cell (square 3x3) with margin", () => {
+        const turns = [
+          { x: 5, y: 0 },
+          { x: 5, y: 1 },
+          { x: 5, y: 2 },
+          { x: 6, y: 0 },
+          { x: 6, y: 1 },
+          { x: 6, y: 2 },
+          { x: 7, y: 0 },
+          { x: 7, y: 1 },
+          { x: 7, y: 2 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(9);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 5, y: 0 },
+          { x: 7, y: 2 },
+        ]);
+      });
+      it("Check Rectangle from 8 cell l-forma", () => {
+        const turns = [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 0, y: 1 },
+          { x: 1, y: 1 },
+          { x: 0, y: 2 },
+          { x: 1, y: 2 },
+          { x: 0, y: 3 },
+          { x: 1, y: 3 },
+          { x: 2, y: 2 },
+          { x: 2, y: 3 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(8);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 0, y: 0 },
+          { x: 1, y: 3 },
+        ]);
+      });
+    });
   });
 });

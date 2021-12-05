@@ -71,8 +71,30 @@ export const game = (size: number) => {
       let i = 0;
       while (!isCurrentDiagonalMaximal && i < 14) {
         i++;
-        // checkRectangleToRight(cell, currentDiagonal);
-        // checkRectangleToBottom(cell, currentDiagonal);
+        const rectangleToRight = getMaximumRectangleToRight(
+          cell,
+          currentDiagonal
+        );
+        if (rectangleToRight.size > game.biggestRectangleSize) {
+          game.biggestRectangleSize = rectangleToRight.size;
+          game.biggestRectangleCoordinates = [
+            rectangleToRight.cornerCoordinates[0],
+            rectangleToRight.cornerCoordinates[1],
+          ];
+        }
+
+        const rectangleToBottom = getMaximumRectangleToBottom(
+          cell,
+          currentDiagonal
+        );
+        if (rectangleToBottom.size > game.biggestRectangleSize) {
+          game.biggestRectangleSize = rectangleToBottom.size;
+          game.biggestRectangleCoordinates = [
+            rectangleToBottom.cornerCoordinates[0],
+            rectangleToBottom.cornerCoordinates[1],
+          ];
+        }
+
         const nextDiagonal = getNextDiagonal(cell, currentDiagonal);
         if (currentDiagonal === nextDiagonal) {
           isCurrentDiagonalMaximal = true;
@@ -81,6 +103,34 @@ export const game = (size: number) => {
         }
       }
     });
+  };
+
+  const getMaximumRectangleToRight = (cell: Coordinate, diagonal: number) => {
+    let checkNextColumn = 1;
+    let x;
+    for (x = cell.x; x < 15 && checkNextColumn; x++) {
+      for (let y = cell.y; y < cell.y + diagonal; y++) {
+        checkNextColumn *= Number(game.board[y][x]);
+      }
+    }
+    return {
+      cornerCoordinates: [cell, { x: x - 2, y: cell.y + diagonal - 1 }],
+      size: diagonal * (x - 1 - cell.x),
+    };
+  };
+
+  const getMaximumRectangleToBottom = (cell: Coordinate, diagonal: number) => {
+    let checkNextColumn = 1;
+    let y;
+    for (y = cell.y; y < 15 && checkNextColumn; y++) {
+      for (let x = cell.x; x < cell.x + diagonal; x++) {
+        checkNextColumn *= Number(game.board[y][x]);
+      }
+    }
+    return {
+      cornerCoordinates: [cell, { y: y - 2, x: cell.x + diagonal - 1 }],
+      size: diagonal * (y - 1 - cell.y),
+    };
   };
 
   const getNextDiagonal = (
