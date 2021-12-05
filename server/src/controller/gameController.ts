@@ -66,40 +66,42 @@ export const game = (size: number) => {
         game.biggestRectangleSize = 1;
         game.biggestRectangleCoordinates = [cell, cell];
       }
-      let currentDiagonal = 1;
-      let isCurrentDiagonalMaximal = false;
-      let i = 0;
-      while (!isCurrentDiagonalMaximal && i < 14) {
-        i++;
-        const rectangleToRight = getMaximumRectangleToRight(
-          cell,
-          currentDiagonal
-        );
-        if (rectangleToRight.size > game.biggestRectangleSize) {
-          game.biggestRectangleSize = rectangleToRight.size;
-          game.biggestRectangleCoordinates = [
-            rectangleToRight.cornerCoordinates[0],
-            rectangleToRight.cornerCoordinates[1],
-          ];
-        }
+      if (getPotentialMaximumForCell(cell) > game.biggestRectangleSize) {
+        let currentDiagonal = 1;
+        let isCurrentDiagonalMaximal = false;
+        let i = 0;
+        while (!isCurrentDiagonalMaximal && i < 14) {
+          i++;
+          const rectangleToRight = getMaximumRectangleToRight(
+            cell,
+            currentDiagonal
+          );
+          if (rectangleToRight.size > game.biggestRectangleSize) {
+            game.biggestRectangleSize = rectangleToRight.size;
+            game.biggestRectangleCoordinates = [
+              rectangleToRight.cornerCoordinates[0],
+              rectangleToRight.cornerCoordinates[1],
+            ];
+          }
 
-        const rectangleToBottom = getMaximumRectangleToBottom(
-          cell,
-          currentDiagonal
-        );
-        if (rectangleToBottom.size > game.biggestRectangleSize) {
-          game.biggestRectangleSize = rectangleToBottom.size;
-          game.biggestRectangleCoordinates = [
-            rectangleToBottom.cornerCoordinates[0],
-            rectangleToBottom.cornerCoordinates[1],
-          ];
-        }
+          const rectangleToBottom = getMaximumRectangleToBottom(
+            cell,
+            currentDiagonal
+          );
+          if (rectangleToBottom.size > game.biggestRectangleSize) {
+            game.biggestRectangleSize = rectangleToBottom.size;
+            game.biggestRectangleCoordinates = [
+              rectangleToBottom.cornerCoordinates[0],
+              rectangleToBottom.cornerCoordinates[1],
+            ];
+          }
 
-        const nextDiagonal = getNextDiagonal(cell, currentDiagonal);
-        if (currentDiagonal === nextDiagonal) {
-          isCurrentDiagonalMaximal = true;
-        } else {
-          currentDiagonal = nextDiagonal;
+          const nextDiagonal = getNextDiagonal(cell, currentDiagonal);
+          if (currentDiagonal === nextDiagonal) {
+            isCurrentDiagonalMaximal = true;
+          } else {
+            currentDiagonal = nextDiagonal;
+          }
         }
       }
     });
