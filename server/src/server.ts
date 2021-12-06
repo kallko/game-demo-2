@@ -23,7 +23,7 @@ io.on("connection", (sock: socketIo) => {
     });
   };
 
-  const reset = () => {
+  const onRreset = () => {
     clear();
     io.emit("message", "Let's play another Game");
     io.emit("biggestRectangle", {
@@ -32,7 +32,7 @@ io.on("connection", (sock: socketIo) => {
     });
   };
   sock.on("turn", onTurn);
-  sock.on("reset", reset);
+  sock.on("reset", onRreset);
   sock.emit("board", getGame());
 });
 
