@@ -14,6 +14,9 @@ export const game = (size: number) => {
       // @ts-ignore
       .fill()
       .map(() => Array(size).fill(null));
+    game.filledCells = [];
+    game.biggestRectangleCoordinates = [];
+    game.biggestRectangleSize = 0;
   };
 
   const inBounds = (x: number, y: number) => {

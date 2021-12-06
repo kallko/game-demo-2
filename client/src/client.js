@@ -18,12 +18,7 @@ const log = (text) => {
 
 const onChatSubmitted = (sock) => (e) => {
   e.preventDefault();
-
-  const input = document.querySelector("#chat");
-  const text = input.value;
-  input.value = "";
-
-  sock.emit("message", text);
+  sock.emit("reset");
 };
 
 const createBoard = (canvas, numCells = 15) => {
@@ -44,10 +39,10 @@ const createBoard = (canvas, numCells = 15) => {
     ctx.beginPath();
 
     for (let i = 0; i < numCells + 1; i++) {
-      ctx.moveTo(i * cellSize, "#1B1C1C");
+      ctx.moveTo(i * cellSize, 0);
       ctx.lineTo(i * cellSize, numCells * cellSize);
 
-      ctx.moveTo("#1B1C1C", i * cellSize);
+      ctx.moveTo(0, i * cellSize);
       ctx.lineTo(numCells * cellSize, i * cellSize);
     }
 
@@ -85,6 +80,7 @@ const createBoard = (canvas, numCells = 15) => {
         }
       }
     }
+    log("Biggest rectangle size: " + game.biggestRectangleSize);
   };
 
   const playingBoard = (game = []) => {

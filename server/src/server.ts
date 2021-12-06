@@ -39,8 +39,16 @@ io.on("connection", (sock: socketIo) => {
     }
   };
 
+  const reset = () => {
+    clear();
+    io.emit("biggestRectangle", {
+      board: getBoard(),
+      game: getGame(),
+    });
+  };
   sock.on("message", (text: string) => io.emit("message", text));
   sock.on("turn", onTurn);
+  sock.on("reset", reset);
 
   sock.emit("board", getGame());
 });
