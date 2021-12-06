@@ -44,10 +44,10 @@ const createBoard = (canvas, numCells = 15) => {
     ctx.beginPath();
 
     for (let i = 0; i < numCells + 1; i++) {
-      ctx.moveTo(i * cellSize, 0);
+      ctx.moveTo(i * cellSize, "#1B1C1C");
       ctx.lineTo(i * cellSize, numCells * cellSize);
 
-      ctx.moveTo(0, i * cellSize);
+      ctx.moveTo("#1B1C1C", i * cellSize);
       ctx.lineTo(numCells * cellSize, i * cellSize);
     }
 
@@ -57,7 +57,7 @@ const createBoard = (canvas, numCells = 15) => {
   const drawBoard = (board) => {
     board.forEach((row, y) => {
       row.forEach((color, x) => {
-        color && fillCell(x, y, "grey");
+        color && fillCell(x, y, "#727474");
       });
     });
   };
@@ -66,21 +66,30 @@ const createBoard = (canvas, numCells = 15) => {
     console.log("Board x, y", board, x, y);
   };
 
-  const drawBoardWithBiggestRectangle = (board) => {
-    board.forEach((row, y) => {
+  const drawBoardWithBiggestRectangle = (game) => {
+    game.board.forEach((row, y) => {
       row.forEach((color, x) => {
         if (!color) {
-          fillCell(x, y, "white");
+          fillCell(x, y, "#FFFFFF");
         } else {
-          fillCell(x, y, "grey");
+          fillCell(x, y, "#727474");
         }
       });
     });
+    if (game.biggestRectangleCoordinates[0]) {
+      const topCell = game.biggestRectangleCoordinates[0];
+      const bottomCell = game.biggestRectangleCoordinates[1];
+      for (let x = topCell.x; x < bottomCell.x + 1; x++) {
+        for (let y = topCell.y; y < bottomCell.y + 1; y++) {
+          fillCell(x, y, "#882222");
+        }
+      }
+    }
   };
 
-  const playingBoard = (board = [], one) => {
+  const playingBoard = (game = []) => {
     drawGrid();
-    drawBoardWithBiggestRectangle(board, one);
+    drawBoardWithBiggestRectangle(game);
     drawGrid();
   };
 
@@ -117,8 +126,8 @@ const createBoard = (canvas, numCells = 15) => {
     return fillCell(x, y, color);
   });
   sock.on("board", reset);
-  sock.on("biggestRectangle", ({ board, biggestRectangle }) => {
-    playingBoard(board, biggestRectangle);
+  sock.on("biggestRectangle", ({ game }) => {
+    playingBoard(game);
   });
 
   document

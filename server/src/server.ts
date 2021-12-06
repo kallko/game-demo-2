@@ -24,14 +24,11 @@ io.on("connection", (sock: socketIo) => {
 
   const onTurn = ({ x, y }: { x: number; y: number }) => {
     if (coolDown()) {
-      io.emit("turn", { game: getGame(), x, y, color });
       const biggestRectangle = makeTurn(x, y);
+      io.emit("turn", { game: getGame(), x, y, color });
       io.emit("biggestRectangle", {
         board: getBoard(),
-        biggestRectangle: [
-          [0, 0],
-          [1, 1],
-        ],
+        game: getGame(),
       });
       // if (!playerWin) {
       //   sock.emit("message", "YOU WIN");

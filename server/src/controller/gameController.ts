@@ -116,21 +116,27 @@ export const game = (size: number) => {
       }
     }
     return {
-      cornerCoordinates: [cell, { x: x - 2, y: cell.y + diagonal - 1 }],
+      cornerCoordinates: [
+        cell,
+        { x: checkNextColumn ? 14 : x - 2, y: cell.y + diagonal - 1 },
+      ],
       size: diagonal * (x - 1 - cell.x),
     };
   };
 
   const getMaximumRectangleToBottom = (cell: Coordinate, diagonal: number) => {
-    let checkNextColumn = 1;
+    let checkNextRow = 1;
     let y;
-    for (y = cell.y; y < 15 && checkNextColumn; y++) {
+    for (y = cell.y; y < 15 && checkNextRow; y++) {
       for (let x = cell.x; x < cell.x + diagonal; x++) {
-        checkNextColumn *= Number(game.board[y][x]);
+        checkNextRow *= Number(game.board[y][x]);
       }
     }
     return {
-      cornerCoordinates: [cell, { y: y - 2, x: cell.x + diagonal - 1 }],
+      cornerCoordinates: [
+        cell,
+        { y: checkNextRow ? 14 : y - 2, x: cell.x + diagonal - 1 },
+      ],
       size: diagonal * (y - 1 - cell.y),
     };
   };

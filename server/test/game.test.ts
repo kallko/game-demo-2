@@ -266,6 +266,25 @@ describe("Game tests:", function () {
           { x: 1, y: 3 },
         ]);
       });
+      it("Check | forma to the bottom of field (from bug)", () => {
+        const turns = [
+          { x: 12, y: 11 },
+          { x: 12, y: 12 },
+          { x: 12, y: 13 },
+          { x: 12, y: 14 },
+          { x: 13, y: 11 },
+          { x: 13, y: 12 },
+          { x: 13, y: 13 },
+          { x: 13, y: 14 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        // expect(game.biggestRectangleSize).equal(8);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 12, y: 11 },
+          { x: 13, y: 14 },
+        ]);
+      });
     });
   });
 });
