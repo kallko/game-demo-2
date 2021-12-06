@@ -279,10 +279,35 @@ describe("Game tests:", function () {
         ];
         turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
         const game = gameController.getGame();
-        // expect(game.biggestRectangleSize).equal(8);
+        expect(game.biggestRectangleSize).equal(8);
         expect(game.biggestRectangleCoordinates).deep.equal([
           { x: 12, y: 11 },
           { x: 13, y: 14 },
+        ]);
+      });
+      it("Check 2 rectangle - - forma at the bottom of field (from bug)", () => {
+        const turns = [
+          { x: 0, y: 13 },
+          { x: 0, y: 14 },
+          { x: 1, y: 13 },
+          { x: 1, y: 14 },
+          { x: 2, y: 13 },
+          { x: 2, y: 4 },
+          { x: 11, y: 13 },
+          { x: 11, y: 14 },
+          { x: 12, y: 13 },
+          { x: 12, y: 14 },
+          { x: 13, y: 13 },
+          { x: 13, y: 14 },
+          { x: 14, y: 13 },
+          { x: 14, y: 14 },
+        ];
+        turns.forEach((turn) => gameController.makeTurn(turn.x, turn.y));
+        const game = gameController.getGame();
+        expect(game.biggestRectangleSize).equal(8);
+        expect(game.biggestRectangleCoordinates).deep.equal([
+          { x: 11, y: 13 },
+          { x: 14, y: 14 },
         ]);
       });
     });

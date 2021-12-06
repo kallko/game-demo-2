@@ -1,4 +1,8 @@
 import { Coordinate, Game } from "../@type/Game";
+import {
+  setStartSearch,
+  sortByDistanceToLeftTop,
+} from "../helper/gameControllerHelper";
 
 export const game = (size: number) => {
   // two-dimensional array filled with nulls
@@ -39,11 +43,9 @@ export const game = (size: number) => {
   const getBiggestRectangle = () => {
     game.biggestRectangleSize = 0;
     game.biggestRectangleCoordinates = [];
+
     game.filledCells.forEach((cell) => {
-      if (game.biggestRectangleSize === 0) {
-        game.biggestRectangleSize = 1;
-        game.biggestRectangleCoordinates = [cell, cell];
-      }
+      game = setStartSearch(game, cell);
       if (getPotentialMaximumForCell(cell) > game.biggestRectangleSize) {
         let currentDiagonal = 1;
         let isCurrentDiagonalMaximal = false;
@@ -93,12 +95,13 @@ export const game = (size: number) => {
         checkNextColumn *= Number(game.board[y][x]);
       }
     }
+
     return {
       cornerCoordinates: [
         cell,
         { x: checkNextColumn ? 14 : x - 2, y: cell.y + diagonal - 1 },
       ],
-      size: diagonal * (x - 1 - cell.x),
+      size: diagonal * (x - 1 - cell.x + checkNextColumn),
     };
   };
 
@@ -115,7 +118,7 @@ export const game = (size: number) => {
         cell,
         { y: checkNextRow ? 14 : y - 2, x: cell.x + diagonal - 1 },
       ],
-      size: diagonal * (y - 1 - cell.y),
+      size: diagonal * (y - 1 - cell.y + checkNextRow),
     };
   };
 
@@ -168,10 +171,3 @@ export const game = (size: number) => {
     getPotentialMaximumForRectangleToBottom,
   };
 };
-
-function sortByDistanceToLeftTop(
-  coordinateA: Coordinate,
-  coordinateB: Coordinate
-) {
-  return coordinateA.x + coordinateA.y - coordinateB.x - coordinateB.y;
-}

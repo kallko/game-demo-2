@@ -91,8 +91,6 @@ const createBoard = (canvas, numCells = 15) => {
   return { fillCell, reset, getCellCoordinates, playingBoard };
 };
 
-
-
 (() => {
   const sock = io();
   const canvas = document.querySelector("canvas");
@@ -110,6 +108,7 @@ const createBoard = (canvas, numCells = 15) => {
   });
   sock.on("board", reset);
   sock.on("biggestRectangle", ({ game }) => {
+    console.log("!Game", game);
     playingBoard(game);
   });
 
