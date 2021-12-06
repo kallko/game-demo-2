@@ -4,8 +4,7 @@
   "description": "A tiny gamedev demo",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts ",
+    "dev": "ts-node-dev --respawn --pretty --transpile-only server/src/server.ts ",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' NODE_ENV=TEST npx mocha --require ts-node/register 'test/*.test.ts'"
   },
   "keywords": [
@@ -13,11 +12,7 @@
     "Game",
     "Socket.IO"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Juriy/game-demo.git"
-  },
-  "author": "Juriy Bura <juriy.bura@gmail.com>",
+  "author": "Kalko Andrii",
   "license": "ISC",
   "dependencies": {
     "@types/socket.io-client": "^3.0.0",

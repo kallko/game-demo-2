@@ -1,0 +1,13 @@
+services:
+  game_server:
+    build:
+      context: .
+    volumes:
+      - .:/server
+      - .:/client
+      - /server/node_modules
+    command: bash -c "npm run dev"
+    ports:
+    - '8090:8090'
+
+
