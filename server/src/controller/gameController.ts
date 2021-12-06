@@ -19,35 +19,10 @@ export const game = (size: number) => {
     game.biggestRectangleSize = 0;
   };
 
-  const inBounds = (x: number, y: number) => {
-    return (
-      y >= 0 && y < game.board.length && x >= 0 && x < game.board[y].length
-    );
-  };
-
-  const _numMatches = (x: number, y: number, dx: number, dy: number) => {
-    let i = 1;
-    while (
-      inBounds(x + i * dx, y + i * dy) &&
-      game.board[y + i * dy][x + i * dx] === game.board[y][x]
-    ) {
-      i++;
-    }
-    return i - 1;
-  };
-
-  const isWinningTurn = (x: number, y: number) => {
-    return [
-      [1, 1],
-      [2, 2],
-    ];
-  };
-
   const makeTurn = (x: number, y: number) => {
     setFilledCells(x, y);
     game.board[y][x] = !game.board[y][x] ? 1 : null;
-    getBiggestRectangle();
-    return isWinningTurn(x, y);
+    return getBiggestRectangle();
   };
 
   const setFilledCells = (x: number, y: number) => {
@@ -182,6 +157,7 @@ export const game = (size: number) => {
   const getBoard = () => game.board;
   const getGame = (): Game => game;
   clear();
+
   return {
     makeTurn,
     getBoard,

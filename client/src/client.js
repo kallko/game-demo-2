@@ -16,7 +16,7 @@ const log = (text) => {
   parent.scrollTop = parent.scrollHeight;
 };
 
-const onChatSubmitted = (sock) => (e) => {
+const onReset = (sock) => (e) => {
   e.preventDefault();
   sock.emit("reset");
 };
@@ -49,18 +49,6 @@ const createBoard = (canvas, numCells = 15) => {
     ctx.stroke();
   };
 
-  const drawBoard = (board) => {
-    board.forEach((row, y) => {
-      row.forEach((color, x) => {
-        color && fillCell(x, y, "#727474");
-      });
-    });
-  };
-
-  const onTurn = (board, x, y) => {
-    console.log("Board x, y", board, x, y);
-  };
-
   const drawBoardWithBiggestRectangle = (game) => {
     game.board.forEach((row, y) => {
       row.forEach((color, x) => {
@@ -71,8 +59,8 @@ const createBoard = (canvas, numCells = 15) => {
         }
       });
     });
-    if (game.biggestRectangleCoordinates[0]) {
-      const topCell = game.biggestRectangleCoordinates[0];
+    const topCell = game.biggestRectangleCoordinates[0];
+    if (topCell) {
       const bottomCell = game.biggestRectangleCoordinates[1];
       for (let x = topCell.x; x < bottomCell.x + 1; x++) {
         for (let y = topCell.y; y < bottomCell.y + 1; y++) {
@@ -84,15 +72,15 @@ const createBoard = (canvas, numCells = 15) => {
   };
 
   const playingBoard = (game = []) => {
-    drawGrid();
     drawBoardWithBiggestRectangle(game);
     drawGrid();
   };
 
   const reset = (game = []) => {
+    log("let's start new GAME");
     clear();
+    drawBoardWithBiggestRectangle(game);
     drawGrid();
-    drawBoard(game.board);
   };
 
   const getCellCoordinates = (x, y) => ({
@@ -100,15 +88,15 @@ const createBoard = (canvas, numCells = 15) => {
     y: Math.floor(y / cellSize),
   });
 
-  return { fillCell, reset, getCellCoordinates, playingBoard, onTurn };
+  return { fillCell, reset, getCellCoordinates, playingBoard };
 };
 
-(() => {
-  // log("chat is disabled on this server");
 
+
+(() => {
   const sock = io();
   const canvas = document.querySelector("canvas");
-  const { fillCell, reset, getCellCoordinates, playingBoard, onTurn } =
+  const { fillCell, reset, getCellCoordinates, playingBoard } =
     createBoard(canvas);
 
   const onClick = (e) => {
@@ -117,8 +105,7 @@ const createBoard = (canvas, numCells = 15) => {
   };
 
   sock.on("message", log);
-  sock.on("turn", ({ board, x, y, color }) => {
-    onTurn(board, x, y);
+  sock.on("turn", ({ x, y, color }) => {
     return fillCell(x, y, color);
   });
   sock.on("board", reset);
@@ -128,7 +115,7 @@ const createBoard = (canvas, numCells = 15) => {
 
   document
     .querySelector("#chat-form")
-    .addEventListener("submit", onChatSubmitted(sock));
+    .addEventListener("submit", onReset(sock));
 
   canvas.addEventListener("click", onClick);
 })();
