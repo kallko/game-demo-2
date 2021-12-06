@@ -14,3 +14,21 @@ export function setStartSearch(game: Game, cell: Coordinate): Game {
   }
   return game;
 }
+
+export const getPotentialMaximumForCell = (cell: Coordinate): number => {
+  return (15 - cell.x) * (15 - cell.y);
+};
+
+export const getPotentialMaximumForRectangleToRight = (
+  cell: Coordinate,
+  diagonal: number
+): number => {
+  return diagonal * (15 - cell.x);
+};
+
+export const getPotentialMaximumForRectangleToBottom = (
+  cell: Coordinate,
+  diagonal: number
+): number => {
+  return (15 - cell.y) * diagonal;
+};

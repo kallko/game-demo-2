@@ -1,5 +1,8 @@
 import { Coordinate, Game } from "../@type/Game";
 import {
+  getPotentialMaximumForCell,
+  getPotentialMaximumForRectangleToBottom,
+  getPotentialMaximumForRectangleToRight,
   setStartSearch,
   sortByDistanceToLeftTop,
 } from "../helper/gameControllerHelper";
@@ -45,42 +48,33 @@ export const game = (size: number) => {
     game.biggestRectangleCoordinates = [];
 
     game.filledCells.forEach((cell) => {
-      game = setStartSearch(game, cell);
+      setStartSearch(game, cell);
       if (getPotentialMaximumForCell(cell) > game.biggestRectangleSize) {
         let currentDiagonal = 1;
         let isCurrentDiagonalMaximal = false;
-        let i = 0;
-        while (!isCurrentDiagonalMaximal && i < 14) {
-          i++;
-          const rectangleToRight = getMaximumRectangleToRight(
-            cell,
-            currentDiagonal
-          );
-          if (rectangleToRight.size > game.biggestRectangleSize) {
-            game.biggestRectangleSize = rectangleToRight.size;
-            game.biggestRectangleCoordinates = [
-              rectangleToRight.cornerCoordinates[0],
-              rectangleToRight.cornerCoordinates[1],
-            ];
+
+        while (!isCurrentDiagonalMaximal) {
+          const potentialMaximumToRight =
+            getPotentialMaximumForRectangleToRight(cell, currentDiagonal);
+          const potentialMaximumToBottom =
+            getPotentialMaximumForRectangleToBottom(cell, currentDiagonal);
+          if (
+            potentialMaximumToRight > game.biggestRectangleSize ||
+            potentialMaximumToBottom > game.biggestRectangleSize
+          ) {
+            if (potentialMaximumToRight > potentialMaximumToBottom) {
+              checkToRight(cell, currentDiagonal);
+              checkToBottom(cell, currentDiagonal);
+            } else {
+              checkToBottom(cell, currentDiagonal);
+              checkToRight(cell, currentDiagonal);
+            }
           }
 
-          const rectangleToBottom = getMaximumRectangleToBottom(
-            cell,
-            currentDiagonal
-          );
-          if (rectangleToBottom.size > game.biggestRectangleSize) {
-            game.biggestRectangleSize = rectangleToBottom.size;
-            game.biggestRectangleCoordinates = [
-              rectangleToBottom.cornerCoordinates[0],
-              rectangleToBottom.cornerCoordinates[1],
-            ];
-          }
-
-          const nextDiagonal = getNextDiagonal(cell, currentDiagonal);
-          if (currentDiagonal === nextDiagonal) {
+          if (currentDiagonal === getNextDiagonal(cell, currentDiagonal)) {
             isCurrentDiagonalMaximal = true;
           } else {
-            currentDiagonal = nextDiagonal;
+            currentDiagonal++;
           }
         }
       }
@@ -140,25 +134,50 @@ export const game = (size: number) => {
     }
   };
 
-  const getPotentialMaximumForCell = (cell: Coordinate): number => {
-    return (15 - cell.x) * (15 - cell.y);
+  const setNewMaximum = (rectangle: {
+    cornerCoordinates: Coordinate[];
+    size: number;
+  }) => {
+    game.biggestRectangleSize = rectangle.size;
+    game.biggestRectangleCoordinates = [
+      rectangle.cornerCoordinates[0],
+      rectangle.cornerCoordinates[1],
+    ];
   };
 
-  const getPotentialMaximumForRectangleToRight = (
-    cell: Coordinate,
-    diagonal: number
-  ): number => {
-    return diagonal * (15 - cell.x);
+  const checkToRight = (cell: Coordinate, currentDiagonal: number) => {
+    if (
+      getPotentialMaximumForRectangleToRight(cell, currentDiagonal) >
+      game.biggestRectangleSize
+    ) {
+      const rectangleToRight = getMaximumRectangleToRight(
+        cell,
+        currentDiagonal
+      );
+      if (rectangleToRight.size > game.biggestRectangleSize) {
+        setNewMaximum(rectangleToRight);
+      }
+    }
   };
 
-  const getPotentialMaximumForRectangleToBottom = (
-    cell: Coordinate,
-    diagonal: number
-  ): number => {
-    return (15 - cell.y) * diagonal;
+  const checkToBottom = (cell: Coordinate, currentDiagonal: number) => {
+    if (
+      getPotentialMaximumForRectangleToBottom(cell, currentDiagonal) >
+      game.biggestRectangleSize
+    ) {
+      const rectangleToBottom = getMaximumRectangleToBottom(
+        cell,
+        currentDiagonal
+      );
+      if (rectangleToBottom.size > game.biggestRectangleSize) {
+        setNewMaximum(rectangleToBottom);
+      }
+    }
   };
+
   const getBoard = () => game.board;
   const getGame = (): Game => game;
+
   clear();
 
   return {
@@ -166,8 +185,5 @@ export const game = (size: number) => {
     getBoard,
     clear,
     getGame,
-    getPotentialMaximumForCell,
-    getPotentialMaximumForRectangleToRight,
-    getPotentialMaximumForRectangleToBottom,
   };
 };
